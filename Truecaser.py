@@ -6,12 +6,12 @@ This file contains the functions to truecase a sentence.
 """
 
 def getScore(prevToken, possibleToken, nextToken, wordCasingLookup, uniDist, backwardBiDist, forwardBiDist, trigramDist):
-    pseudoCount = 5.0
+    pseudoCount = 5.0 # Not sure how psuedoCount is defined
     
     #Get Unigram Score
     nominator = uniDist[possibleToken]+pseudoCount    
     denominator = 0    
-    for alternativeToken in wordCasingLookup[possibleToken.lower()]:
+    for alternativeToken in wordCasingLookup[possibleToken.lower().strip()]:
         denominator += uniDist[alternativeToken]+pseudoCount
         
     unigramScore = nominator / denominator
@@ -22,7 +22,7 @@ def getScore(prevToken, possibleToken, nextToken, wordCasingLookup, uniDist, bac
     if prevToken != None:  
         nominator = backwardBiDist[prevToken+'_'+possibleToken]+pseudoCount
         denominator = 0    
-        for alternativeToken in wordCasingLookup[possibleToken.lower()]:
+        for alternativeToken in wordCasingLookup[possibleToken.lower().strip()]:
             denominator += backwardBiDist[prevToken+'_'+alternativeToken]+pseudoCount
             
         bigramBackwardScore = nominator / denominator
@@ -30,10 +30,10 @@ def getScore(prevToken, possibleToken, nextToken, wordCasingLookup, uniDist, bac
     #Get Forward Score  
     bigramForwardScore = 1
     if nextToken != None:  
-        nextToken = nextToken.lower() #Ensure it is lower case
+        nextToken = nextToken.lower().strip() #Ensure it is lower case
         nominator = forwardBiDist[possibleToken+"_"+nextToken]+pseudoCount
         denominator = 0    
-        for alternativeToken in wordCasingLookup[possibleToken.lower()]:
+        for alternativeToken in wordCasingLookup[possibleToken.lower().strip()]:
             denominator += forwardBiDist[alternativeToken+"_"+nextToken]+pseudoCount
             
         bigramForwardScore = nominator / denominator
@@ -42,10 +42,10 @@ def getScore(prevToken, possibleToken, nextToken, wordCasingLookup, uniDist, bac
     #Get Trigram Score  
     trigramScore = 1
     if prevToken != None and nextToken != None:  
-        nextToken = nextToken.lower() #Ensure it is lower case
+        nextToken = nextToken.lower().strip() #Ensure it is lower case
         nominator = trigramDist[prevToken+"_"+possibleToken+"_"+nextToken]+pseudoCount
         denominator = 0    
-        for alternativeToken in wordCasingLookup[possibleToken.lower()]:
+        for alternativeToken in wordCasingLookup[possibleToken.lower().strip()]:
             denominator += trigramDist[prevToken+"_"+alternativeToken+"_"+nextToken]+pseudoCount
             
         trigramScore = nominator / denominator
